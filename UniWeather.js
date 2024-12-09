@@ -1,9 +1,16 @@
+// UniWeather.js
+
 class UniWeather {
   constructor(apiKeys) {
     this.apiKeys = apiKeys;
   }
 
   async fetchWeather(country, location) {
+    if (typeof location !== "string" || !location.includes(",")) {
+      throw new Error(
+        'Location must be a string in the format "latitude,longitude" (e.g., "39.7456,-97.0892").',
+      );
+    }
     switch (country.toLowerCase()) {
       case "us":
         return this.fetchUSWeather(location);
