@@ -5,21 +5,49 @@ class UniWeather {
     this.apiKeys = apiKeys;
   }
 
-  async fetchWeather(country, location) {
+  async fetchWeatherFromCoordinates(location) {
     if (typeof location !== "string" || !location.includes(",")) {
       throw new Error(
         'Location must be a string in the format "latitude,longitude" (e.g., "39.7456,-97.0892").',
       );
     }
-    switch (country.toLowerCase()) {
+
+    const [latitude, longitude] = location.split(",").map(Number);
+    const geocodeUrl = `https://api.geocode.xyz/${latitude},${longitude}?json=1`;
+
+    const geocodeResponse = await fetch(geocodeUrl);
+    if (!geocodeResponse.ok) {
+      throw new Error("Failed to determine location details from coordinates.");
+    }
+
+    const geocodeData = await geocodeResponse.json();
+
+    const country = geocodeData.country.toLowerCase();
+    const city = geocodeData.city || null;
+
+    return this.fetchWeatherByCountryAndLocation(country, location, city);
+  }
+
+  async fetchWeatherByCountryAndLocation(country, location, city = null) {
+    switch (country) {
+      case "united states":
       case "us":
         return this.fetchUSWeather(location);
       case "canada":
         return this.fetchCanadaWeather(location);
       case "mexico":
         return this.fetchMexicoWeather(location);
-      case "europe":
-        return this.fetchEuropeWeather(location);
+      case "spain":
+      case "france":
+      case "germany":
+      case "united kingdom":
+      case "uk":
+      case "italy":
+      case "netherlands":
+        if (!city) {
+          throw new Error(`City information is required for ${country}.`);
+        }
+        return this.fetchEuropeWeather({ country, city });
       default:
         throw new Error(`Unsupported country: ${country}`);
     }
@@ -89,6 +117,7 @@ class UniWeather {
       case "germany":
         return this.fetchGermanyWeather(location.city);
       case "uk":
+      case "united kingdom":
         return this.fetchUKWeather(location.city);
       case "italy":
         return this.fetchItalyWeather(location.city);
@@ -214,6 +243,6 @@ class UniWeather {
 //   mexico: 'your-mexico-api-key',
 //   uk: 'your-uk-api-key'
 // });
-// uniWeather.fetchWeather('US', '39.7456,-97.0892').then(console.log).catch(console.error);
+// uniWeather.fetchWeatherFromCoordinates('39.7456,-97.0892').then(console.log).catch(console.error);
 
 export default UniWeather;
