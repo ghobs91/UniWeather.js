@@ -1,0 +1,22 @@
+{
+  "name": "uniweather",
+  "version": "1.0.0",
+  "description": "A JavaScript library for getting weather data directly from national weather service APIs. No 3rd party weather API needed!",
+  "main": "src/UniWeather.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ghobs91/UniWeather.js.git"
+  },
+  "keywords": [
+    "weather"
+  ],
+  "author": "ghobs91",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ghobs91/UniWeather.js/issues"
+  },
+  "homepage": "https://github.com/ghobs91/UniWeather.js#readme"
+}
